@@ -1,6 +1,121 @@
-<html>
-  <body>
-    <p> Hi hello Iam Pavani kalyani <b>Akireddi</b>.<i></i>Here</i> Iam going to give you a <u></u>code</u></p>
-    <img src="restauarant.drawio.png">
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emoji Mood Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fefefe;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      border: 2px solid #ddd;
+      padding: 20px;
+      border-radius: 10px;
+      background: #f9f9f9;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .emoji-picker button {
+      font-size: 2rem;
+      margin: 10px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      transition: transform 0.2s;
+    }
+
+    .emoji-picker button:hover {
+      transform: scale(1.2);
+    }
+
+    #reset {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #ff6666;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #reset:hover {
+      background-color: #e65555;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      font-size: 1.2rem;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>How are you feeling today?</h1>
+    <div class="emoji-picker">
+      <button class="emoji">😊</button>
+      <button class="emoji">😢</button>
+      <button class="emoji">😠</button>
+      <button class="emoji">😴</button>
+      <button class="emoji">😎</button>
+    </div>
+    <h2>Today's Mood: <span id="todayMood">None</span></h2>
+    <h3>Past Moods:</h3>
+    <ul id="moodHistory"></ul>
+    <button id="reset">Clear History</button>
+  </div>
+
+  <script>
+    const emojis = document.querySelectorAll(".emoji");
+    const todayMood = document.getElementById("todayMood");
+    const moodHistory = document.getElementById("moodHistory");
+    const resetBtn = document.getElementById("reset");
+
+    let history = JSON.parse(localStorage.getItem("moodHistory")) || [];
+
+    function updateMoodDisplay() {
+      moodHistory.innerHTML = "";
+      history.forEach((mood, index) => {
+        const li = document.createElement("li");
+        li.textContent = `${index + 1}: ${mood}`;
+        moodHistory.appendChild(li);
+      });
+
+      if (history.length > 0) {
+        todayMood.textContent = history[history.length - 1];
+      } else {
+        todayMood.textContent = "None";
+      }
+    }
+
+    emojis.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const selectedMood = btn.textContent;
+        history.push(selectedMood);
+        localStorage.setItem("moodHistory", JSON.stringify(history));
+        updateMoodDisplay();
+      });
+    });
+
+    resetBtn.addEventListener("click", () => {
+      localStorage.removeItem("moodHistory");
+      history = [];
+      updateMoodDisplay();
+    });
+
+    updateMoodDisplay(); // load on start
+  </script>
+</body>
 </html>
